@@ -4,9 +4,19 @@
   <title>Page Title</title>
 </head>
 <body>
+  <button id='rock'>Rock</button>
+  <button id='paper'>Paper</button>
+  <button id='scissors'>Scissors</button>
+  <div class='result'>
+    <p id='player'>Player score: 0</p>
+    <p id='computer'>Computer score: 0</p>
+    <p id='outcome'></p>
+    <p id='winner'></p>
+  </div>
   <script>
-      var playerScore = 0;
-      var computerScore = 0;
+      var playerscore = 0;
+      var computerscore = 0;
+
       function computerPlay () {
         var choice = Math.floor(Math.random()*3);
         switch (choice) {
@@ -23,61 +33,87 @@
                 console.log("error function computerPlay");
         }
       }
+
+      function makeChoice (e) {
+        let computerSelection = computerPlay();
+        let playerSelection = e.target.id;
+        outcome = document.querySelector('#outcome')
+        outcome.textContent = ("Computer chooses "+ computerSelection + ". ");
+        outcome.textContent += playRound(playerSelection, computerSelection);
+      }
       
       function playRound (playerSelection, computerSelection) {
-        var computer = computerSelection.toLowerCase();
-        var player = playerSelection.toLowerCase();
+        let computer = computerSelection.toLowerCase();
+        let player = playerSelection.toLowerCase();
         if (computer === player) {
           return("it's a tie!");
         }
         if (computer === "rock") {
           if (player === "paper") {
-            playerScore += 1;
+            updateScore('player');
             return("You win! Paper beats Rock");
           } else if (player === "scissors") {
-            computerScore += 1;
+            updateScore('computer');
             return("You lose! Rock beats Scissors");
           } else {
             console.log("bad player input");
           }
         } else if (computer === "paper") {
           if (player === "scissors") {
-            playerScore += 1;
+            updateScore('player');
             return("You win! Scissors beats Paper");
           } else if (player === "rock") {
-            computerScore += 1;
+            updateScore('computer');
             return("You lose! Paper beats Rock");
           } else {
             console.log("bad player input");
           }
         } else if (computer === "scissors") {
           if (player === "rock") {
-            playerScore += 1;
+            updateScore('player');
             return("You win! Rock beats Scissors");
           } else if (player === "paper") {
-            computerScore += 1;
+            updateScore('computer');
             return("You lose! Scissors beats Paper");
           } else {
             console.log("bad player input");
           }
         }
       } 
-      function game() {
-        
-        for (let round = 1; round <= 5; round++) {
-          
-          var computerSelection = computerPlay();
-          var playerSelection = window.prompt("Please choose rock, paper, and scissors");
-          console.log("Computer chooses "+ computerSelection)
-          console.log(playRound(playerSelection, computerSelection));
-          console.log("Player score: " + playerScore + "  Computer score: " + computerScore);
+
+      function updateScore(contestant) { 
+        const player = document.querySelector('#player');
+        const computer = document.querySelector('#computer');
+        const outcome = document.querySelector('#outcome');
+        const winner = document.querySelector('#winner');
+        if (contestant === 'player') {
+          playerscore += 1;
+          player.textContent = `Player score: ${playerscore}`;
+        } else if (contestant === 'computer') {
+          computerscore += 1;
+          computer.textContent = `Computer score: ${computerscore}`;
+        } else {
+          console.log("error function updateScore");
         }
-        if (playerScore > computerScore) {
-          return "Player wins!";
-        } else if (playerScore < computerScore) {
-          return "Computer wins!";
-        } else
-          return "Game is a draw!";
+        if (playerscore >= 5) {
+          winner.textContent += 'Player wins the match!';
+        }
+        if (computerscore >= 5) {
+          winner.textContent += 'Computer wins the match!';
+        }
       }
+
+      function game() {
+        const rock = document.querySelector('#rock');
+        const paper = document.querySelector('#paper');
+        const scissors = document.querySelector('#scissors');
+
+        rock.addEventListener('click', makeChoice);
+
+        paper.addEventListener('click', makeChoice);
+
+        scissors.addEventListener('click', makeChoice);
+      };
+      game();
   </script>
 </body>
